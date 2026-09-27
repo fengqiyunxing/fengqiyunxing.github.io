@@ -53,3 +53,6 @@ package/
 
 # 日志文件
 *.log
+# 备份与临时目录
+.git.bak/
+_tmp_blog_build_*/\n
