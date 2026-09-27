@@ -1,0 +1,197 @@
+import { P as createAstro, S as maybeRenderHead, f as renderComponent, w as addAttribute, x as renderTemplate } from "./jsx-runtime_DmRdA9YB.mjs";
+import { a as createComponent } from "./consts_B65GORk9.mjs";
+import "./compiler_CSCq9Wq8.mjs";
+import { p as $$Icon } from "./MainGridLayout_B9O8q-AA.mjs";
+import { c as i18n, p as I18nKey } from "./url-utils_Cr7cEKDY.mjs";
+import { createCipheriv, createHmac, pbkdf2Sync } from "node:crypto";
+//#region src/utils/crypto-utils.ts
+var PBKDF2_ITERATIONS = 1e5;
+var SALT_LENGTH = 16;
+var IV_LENGTH = 12;
+var KEY_LENGTH = 32;
+/**
+* Derive deterministic bytes from a key and context string using HMAC-SHA256.
+*/
+function deriveBytes(key, context, length) {
+	return createHmac("sha256", key).update(context).digest().subarray(0, length);
+}
+/**
+* Encrypt HTML content with AES-256-GCM using PBKDF2-derived key.
+* Salt and IV are deterministic (derived from password + slug) so the same
+* inputs always produce the same ciphertext — this makes sessionStorage
+* password caching work reliably across page reloads.
+*
+* Output format: base64(salt[16] + iv[12] + authTag[16] + ciphertext)
+*/
+function encryptContent(html, password, slug) {
+	const salt = deriveBytes(password, `salt:${slug}`, SALT_LENGTH);
+	const iv = deriveBytes(password, `iv:${slug}`, IV_LENGTH);
+	const key = pbkdf2Sync(password, salt, PBKDF2_ITERATIONS, KEY_LENGTH, "sha256");
+	const cipher = createCipheriv("aes-256-gcm", key, iv);
+	const encrypted = Buffer.concat([cipher.update(html, "utf8"), cipher.final()]);
+	const authTag = cipher.getAuthTag();
+	return Buffer.concat([
+		salt,
+		iv,
+		authTag,
+		encrypted
+	]).toString("base64");
+}
+//#endregion
+//#region src/components/features/EncryptedContent.astro
+createAstro("https://fengqiyunxing.github.io");
+var $$EncryptedContent = createComponent(async ($$result, $$props, $$slots) => {
+	const Astro = $$result.createAstro($$props, $$slots);
+	Astro.self = $$EncryptedContent;
+	const { password, slug, hint = "" } = Astro.props;
+	const encryptedData = encryptContent(await Astro.slots.render("default"), password, slug);
+	const labels = {
+		protected: i18n(I18nKey.passwordProtected),
+		desc: i18n(I18nKey.passwordProtectedDesc),
+		hint: i18n(I18nKey.passwordHint),
+		placeholder: i18n(I18nKey.passwordPlaceholder),
+		submit: i18n(I18nKey.passwordSubmit),
+		error: i18n(I18nKey.passwordError)
+	};
+	return renderTemplate`${maybeRenderHead($$result)}<div id="encrypted-container"${addAttribute(encryptedData, "data-encrypted")}${addAttribute(slug, "data-slug")}><!-- Lock UI --><div id="password-ui" class="flex justify-center py-16 px-4"><div class="card-base flex flex-col items-center gap-3 max-w-100 w-full p-8">${renderComponent($$result, "Icon", $$Icon, {
+		"name": "material-symbols:shield-lock",
+		"class": "text-8xl text-(--primary)"
+	})}<h2 class="text-lg font-bold text-black/80 dark:text-white/80 m-0">${labels.protected}</h2><p class="text-sm text-black/40 dark:text-white/40 text-center m-0">${labels.desc}</p>${hint && renderTemplate`<p class="text-xs text-black/30 dark:text-white/30 text-center m-0">${labels.hint}: ${hint}</p>`}<form id="password-form" class="w-full mt-2 space-y-2"><input id="password-input" name="password" type="password"${addAttribute(labels.placeholder, "placeholder")} autocomplete="off" class="w-full px-3 py-2 rounded-lg text-sm bg-black/5 dark:bg-white/10
+                 border border-black/8 dark:border-white/8
+                 text-black/80 dark:text-white/80 placeholder-black/25 dark:placeholder-white/25
+                 outline-hidden focus:border-(--primary) transition"><button type="submit" class="w-full py-2 rounded-lg text-sm font-medium bg-(--primary) text-white dark:text-black/70
+                 hover:opacity-85 active:scale-[0.98] transition-all">${labels.submit}</button></form><p id="password-error" class="text-xs text-red-500 dark:text-red-400 m-0 hidden">${labels.error}</p></div></div><!-- Decrypted content injected here --><div id="decrypted-content" class="hidden"></div></div><script>
+(function() {
+  var ITERATIONS = 100000;
+  var SALT_LEN = 16;
+  var IV_LEN = 12;
+  var TAG_LEN = 16;
+
+  var container = document.getElementById('encrypted-container');
+  if (!container) return;
+
+  var encryptedData = container.getAttribute('data-encrypted');
+  var slug = container.getAttribute('data-slug');
+  var cacheKey = 'pw:' + slug;
+
+  var ui = document.getElementById('password-ui');
+  var form = document.getElementById('password-form');
+  var input = document.getElementById('password-input');
+  var errorEl = document.getElementById('password-error');
+  var contentEl = document.getElementById('decrypted-content');
+
+  function showContent(html) {
+    contentEl.innerHTML = html;
+    contentEl.classList.remove('hidden');
+    ui.classList.add('hidden');
+    // Scripts injected via innerHTML are inert — re-create them so they execute
+    var scripts = contentEl.querySelectorAll('script');
+    for (var i = 0; i < scripts.length; i++) {
+      var old = scripts[i];
+      var ns = document.createElement('script');
+      for (var j = 0; j < old.attributes.length; j++) {
+        ns.setAttribute(old.attributes[j].name, old.attributes[j].value);
+      }
+      ns.textContent = old.textContent;
+      old.parentNode.replaceChild(ns, old);
+    }
+    // Re-init components after content is in DOM
+    setTimeout(function() {
+      document.dispatchEvent(new CustomEvent('password:decrypted'));
+    }, 100);
+
+    // 初始化解密内容中图片的 LQIP 淡入
+    var placeholders = contentEl.querySelectorAll('.lqip-placeholder');
+    for (var i = 0; i < placeholders.length; i++) {
+      (function(placeholder) {
+        var container = placeholder.parentElement;
+        if (!container) return;
+        var img = container.querySelector('img');
+        if (!img) return;
+        if (img.complete && img.naturalWidth > 0) {
+          img.style.opacity = '1';
+          placeholder.classList.add('loaded');
+        } else {
+          img.addEventListener('load', function() {
+            img.style.opacity = '1';
+            placeholder.classList.add('loaded');
+          }, { once: true });
+          img.addEventListener('error', function() {
+            placeholder.classList.add('loaded');
+          }, { once: true });
+        }
+      })(placeholders[i]);
+    }
+  }
+
+  function showError() {
+    errorEl.classList.remove('hidden');
+  }
+
+  function hideError() {
+    errorEl.classList.add('hidden');
+  }
+
+  function base64ToBytes(b64) {
+    var bin = atob(b64);
+    var bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) {
+      bytes[i] = bin.charCodeAt(i);
+    }
+    return bytes;
+  }
+
+  async function decrypt(pwd) {
+    var raw = base64ToBytes(encryptedData);
+    var salt = raw.slice(0, SALT_LEN);
+    var iv = raw.slice(SALT_LEN, SALT_LEN + IV_LEN);
+    var authTag = raw.slice(SALT_LEN + IV_LEN, SALT_LEN + IV_LEN + TAG_LEN);
+    var ciphertext = raw.slice(SALT_LEN + IV_LEN + TAG_LEN);
+
+    var combined = new Uint8Array(ciphertext.length + TAG_LEN);
+    combined.set(ciphertext);
+    combined.set(authTag, ciphertext.length);
+
+    var enc = new TextEncoder();
+    var keyMaterial = await crypto.subtle.importKey(
+      'raw', enc.encode(pwd), 'PBKDF2', false, ['deriveBits', 'deriveKey']
+    );
+    var key = await crypto.subtle.deriveKey(
+      { name: 'PBKDF2', salt: salt, iterations: ITERATIONS, hash: 'SHA-256' },
+      keyMaterial,
+      { name: 'AES-GCM', length: 256 },
+      false,
+      ['decrypt']
+    );
+    var decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, key, combined);
+    return new TextDecoder().decode(decrypted);
+  }
+
+  // Handle form submit
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var pwd = input.value.trim();
+    if (!pwd) return;
+    hideError();
+    decrypt(pwd).then(function(html) {
+      sessionStorage.setItem(cacheKey, pwd);
+      showContent(html);
+    }).catch(function() {
+      showError();
+    });
+  });
+
+  // Try cached password
+  var cached = sessionStorage.getItem(cacheKey);
+  if (cached) {
+    decrypt(cached).then(function(html) {
+      showContent(html);
+    }).catch(function() {
+      sessionStorage.removeItem(cacheKey);
+    });
+  }
+})();
+<\/script>`;
+}, "D:/求职/存储/fengqiyunxing.github.io/src/components/features/EncryptedContent.astro", void 0);
+//#endregion
+export { $$EncryptedContent as t };

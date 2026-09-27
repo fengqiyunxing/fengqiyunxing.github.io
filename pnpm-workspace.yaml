@@ -1,0 +1,11 @@
+packages:
+  - '.'
+allowBuilds:
+  esbuild: true
+  workerd: true
+
+# 【个性化改造】切到 hoisted linker（扁平 node_modules，无符号链接拓扑）
+# 原因：本环境下 pnpm 11 isolated 模式的 linking 阶段反复被超时/中断，导致 .pnpm 已就位但
+#       顶层 symlink 与 .bin 始终未生成。hoisted 模式像 npm 一样直接放依赖到 node_modules，
+#       不依赖复杂 symlink 拓扑，是确定能跑通的方案。
+nodeLinker: hoisted

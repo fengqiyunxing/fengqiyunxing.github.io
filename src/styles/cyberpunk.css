@@ -1,0 +1,48 @@
+/* ============================================================
+   赛博朋克增强样式（个性化改造）
+   - 生效条件：暗色模式（:root.dark）
+   - 设计原则：仅覆盖 CSS 变量，不改动任何组件类名
+   - 回退方式：删除 src/layouts/Layout.astro 中本文件的 import 即可
+   ============================================================ */
+
+:root.dark {
+	/* ── 霓虹主色 ── */
+	--primary: #00f0ff; /* 霓虹青 */
+	--cyber-magenta: #ff2bd6; /* 霓虹品红（辅助强调） */
+
+	/* ── 近黑底色，强化霓虹对比 ── */
+	--page-bg: #06060d;
+	--card-bg: #0e0e18;
+	--float-panel-bg: #0e0e18;
+
+	/* ── 按钮与交互 ── */
+	--btn-regular-bg: #141428;
+	--btn-regular-bg-hover: #1b1b33;
+	--btn-regular-bg-active: #23234a;
+	--btn-content: #00f0ff;
+
+	/* ── 分隔线与元信息 ── */
+	--line-divider: rgba(0, 240, 255, 0.14);
+	--line-color: rgba(0, 240, 255, 0.16);
+	--meta-divider: rgba(0, 240, 255, 0.28);
+	--content-meta: rgba(198, 238, 255, 0.66);
+
+	/* ── 代码块 ── */
+	--codeblock-bg: #0a0a13;
+	--codeblock-topbar-bg: #12121e;
+
+	/* ── 其他 ── */
+	--muted: #14142a;
+	--selection-bg: rgba(255, 43, 214, 0.35);
+
+	/* ── 霓虹发光（克制，仅阴影层）── */
+	--shadow-lg: 0 0 22px rgba(0, 240, 255, 0.1);
+	--shadow-xl: 0 0 32px rgba(0, 240, 255, 0.12);
+	--shadow-navbar-dark: 0 4px 20px rgba(0, 240, 255, 0.08);
+	--shadow-button-dark: 0 0 14px rgba(0, 240, 255, 0.14);
+
+	/* ── 链接与目录：青 → 品红双色 ── */
+	--link-hover: #ff2bd6;
+	--link-active: #00f0ff;
+	--toc-item-active: #ff2bd6;
+}
