@@ -40,10 +40,12 @@ const pages = resolvePageToggles({
 
 export const siteConfig: SiteConfig = {
 	// 站点标题（R-508：对外署名一律使用 fengqiyunxing）
-	title: "fengqiyunxing",
+	// 【2026-09-27 SEO 优化】保留署名 + 追加主题词，便于搜索引擎识别站点内容
+	title: "fengqiyunxing 的技术博客",
 
 	// 站点副标题（【R-510】原作者的 "Demo site" 已清空，待确认后填写）
-	subtitle: "",
+	// 【2026-09-27 SEO 优化】补充副标题
+	subtitle: "C++ / 后端开发学习笔记",
 
 	// 站点 URL
 	// 【R-510】原作者的 https://firefly.cuteleaf.cn 已移除
@@ -52,10 +54,24 @@ export const siteConfig: SiteConfig = {
 	site_url: "https://fengqiyunxing.github.io",
 
 	// 站点描述（【R-510】原作者主题宣传文案已清空，待确认后填写）
-	description: "",
+	// 【2026-09-27 SEO 优化】填写完整站点描述（meta description，搜索结果摘要的主要来源）
+	description:
+		"fengqiyunxing 的个人技术博客，分享 C++ 学习笔记、后端开发、STL 标准库、智能指针、Linux 等技术文章，整理自小林coding《C++面试题》等优质资料，系统讲解 C++ 基础、面向对象、内存管理与现代 C++ 特性。",
 
 	// 站点关键词（【R-510】已移除原作者品牌词 Firefly / Fuwari）
-	keywords: ["技术博客", "静态博客", "Astro"],
+	// 【2026-09-27 SEO 优化】按博客实际内容补充长尾关键词
+	keywords: [
+		"C++",
+		"C++笔记",
+		"C++面试",
+		"后端开发",
+		"STL",
+		"智能指针",
+		"Linux",
+		"技术博客",
+		"编程学习",
+		"小林coding",
+	],
 
 	// 主题色
 	themeColor: {
