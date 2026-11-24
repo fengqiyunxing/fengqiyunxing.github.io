@@ -49,7 +49,7 @@ slug: cpp-oop
 - 重载是指在同一可访问区内被声明的几个具有不同参数列（参数的类型、个数、顺序）的同名函数，调用时根据参数列表确定调用哪个函数。
 - 重载不关心函数返回类型，因此仅返回值不同、参数列表相同的两个同名函数无法构成重载，编译器会报 cannot be overloaded 错误。
 
-```
+```cpp
 class A {
 public:
     void fun(int tmp);
@@ -62,7 +62,7 @@ public:
 
 - 隐藏是指派生类的函数屏蔽了与其同名的基类函数，只要函数名同名，不管参数列表是否相同，基类函数都会被隐藏。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -93,7 +93,7 @@ int main() {
 - 重写（覆盖）是指派生类中存在重新定义的函数，其函数名、参数列表、返回值类型都必须同基类中被重写的函数一致，只有函数体不同。
 - 派生类调用时会调用派生类的重写函数，不会调用被重写函数，且基类中被重写的函数必须有 virtual 修饰。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -139,7 +139,7 @@ int main() {
 - 当通过基类指针或引用调用虚函数时，C++ 会查找实际对象的类型，调用对应的子类实现，而不是基类的实现。
 - 第一步是定义基类和派生类，基类中的 draw 声明为 virtual，派生类 Circle 与 Square 分别用 override 重写它。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -171,7 +171,7 @@ public:
 
 - 第二步是创建一个函数，接受基类指针作为参数，利用多态性调用不同的派生类方法。
 
-```
+```cpp
 void renderShape(Shape* shape) {
     shape->draw();  // 调用虚函数
 }
@@ -204,7 +204,7 @@ int main() {
 - 在 C++ 中，多态主要通过虚函数来实现，多态分为静态多态和动态多态两种。
 - 静态多态（编译时多态）主要通过函数重载来实现，函数重载是指在同一个作用域内可以有多个同名函数，但是它们的参数列表（参数个数、参数类型或者参数顺序）不同。
 
-```
+```cpp
 int add(int a, int b) {
     return a + b;
 }
@@ -228,7 +228,7 @@ double add(double a, double b) {
 - **灵活性**：函数对象可以重载多个操作符或添加更多功能，普通函数则只能定义一个函数。
 - 普通函数的写法是直接定义一个带有返回类型和参数列表的函数。
 
-```
+```cpp
 int add(int a, int b) {
     return a + b;
 }
@@ -236,7 +236,7 @@ int add(int a, int b) {
 
 - 函数对象的写法是定义一个类并重载 operator()，再创建该类的实例，然后像调用函数一样调用这个实例。
 
-```
+```cpp
 class Add {
 public:
     int operator()(int a, int b) {

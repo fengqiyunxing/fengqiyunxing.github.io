@@ -45,7 +45,7 @@ slug: cpp-smart-pointer
 - **引用计数机制**：它通过引用计数机制来实现这一点，每个 `std::shared_ptr` 都会维护一个引用计数，记录有多少个 `std::shared_ptr` 共享同一个对象。
 - **归零释放**：当引用计数变为 0 时，对象的内存会被释放。
 
-```
+```cpp
 #include <iostream>
 #include <memory>
 
@@ -80,7 +80,7 @@ int main() {
 - **为何 weak_ptr 能打破循环**：`std::weak_ptr` 不会增加所指向对象的引用计数，因此可以打破这种循环引用。
 - **结合用法（打破循环）**：在类 A 中持有 `std::shared_ptr<B> b_ptr;`，在类 B 中改为持有 `std::weak_ptr<A> a_ptr;`。
 
-```
+```cpp
 #include <iostream>
 #include <memory>
 
@@ -112,7 +112,7 @@ int main() {
 - **代码解读（正确做法）**：使用 `std::weak_ptr` 后，`b->a_ptr` 不会增加 A 对象的引用计数，当 main 函数结束时，a 和 b 的引用计数降为 0，A 和 B 对象的内存会被正确释放。
 - **结合用法（观察生命周期）**：通过 `std::weak_ptr` 的 `expired()` 方法可以检查所指向的对象是否已经被释放。
 
-```
+```cpp
 #include <iostream>
 #include <memory>
 
@@ -144,7 +144,7 @@ int main() {
 - **归零才释放**：只有当引用计数为零时，才会释放资源。
 - **自动管理的价值**：这种智能指针的内存管理是自动的，因此可以帮助我们避免显式地释放内存或出现内存泄漏的情况。
 
-```
+```cpp
 std::shared_ptr<int> sharedPtr1 = std::make_shared<int>(10);
 std::shared_ptr<int> sharedPtr2 = sharedPtr1;
 sharedPtr1.reset();  // 不会导致内存泄漏，资源仍由sharedPtr2管理
@@ -166,7 +166,7 @@ sharedPtr2.reset();  // 资源被释放
 - **方案一的目的**：其目的是实现所有权的转移。
 - **方案二（release）**：也可以让当前 `unique_ptr` 调用 `release` 释放对 ptr 控制权，然后在另一个 `unique_ptr` 获取控制权。
 
-```
+```cpp
 // A 作为一个类 
 std::unique_ptr<A> ptr1(new A());
 std::unique_ptr<A> ptr2 = std::move(ptr1);
@@ -180,7 +180,7 @@ std::unique_ptr<A> ptr3(ptr2.release());
 - **问题（循环引用）**：在如下例子中定义了两个类 Parent、Child，在两个类中分别定义另一个类的对象的共享指针。
 - **问题的成因**：由于在程序结束后，两个指针相互指向对方的内存空间，导致内存无法释放。
 
-```
+```cpp
 #include <iostream>
 #include <memory>
 
@@ -253,7 +253,7 @@ int main() {
 - **改造方式（改成员类型）**：把 Parent 中的 `shared_ptr<Child> ChildPtr;` 改为 `weak_ptr<Child> ChildPtr;`。
 - **改造方式（访问时提升）**：访问时用 `this->ChildPtr.lock()` 生成一个临时的 `shared_ptr`。
 
-```
+```cpp
 #include <iostream>
 #include <memory>
 

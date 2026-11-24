@@ -69,7 +69,7 @@ slug: cpp-new-features
 
 我们编写的 Lambda 表达式示例如下：
 
-```
+```cpp
 #include <iostream>
 
 int main() {
@@ -82,7 +82,7 @@ int main() {
 
 编译器会将上述 Lambda 表达式转换为类似下面的代码：
 
-```
+```cpp
 #include <iostream>
 
 // 编译器生成的未命名类
@@ -107,7 +107,7 @@ int main() {
 - delete 函数：`= delete` 表示该函数不能被调用。
 - default 函数：`= default` 表示让编译器生成默认的函数，例如生成默认的构造函数和默认的析构函数。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -135,7 +135,7 @@ int main()
 - nullptr 的第一个优势是有类型，类型是 `typedef decltype(nullptr) nullptr_t;`，使用 nullptr 可以提高代码的健壮性。
 - nullptr 的第二个优势体现在函数重载上，因为 NULL 本质上是 0，在函数调用过程中若出现函数重载并且传递的实参是 NULL，可能会出现不知和哪一个函数匹配的情况，但是传递实参 nullptr 就不会出现这种情况。
 
-```
+```cpp
 #include <iostream>
 #include <cstring>
 using namespace std;

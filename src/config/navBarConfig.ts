@@ -24,6 +24,11 @@ const getDynamicNavBarConfig = (): NavBarConfig => {
 		children: [
 			// 归档
 			LinkPresets.Archive,
+			{
+				name: "旧文档案",
+				url: "/archive/legacy/",
+				icon: "material-symbols:history-rounded",
+			},
 
 			// 分类
 			LinkPresets.Categories,

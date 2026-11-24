@@ -10,8 +10,9 @@ import { resolveSiteRoot } from "./site-root";
 // Cloudflare Pages 上产物在 dist/client，本地在 dist，统一对准真实根目录
 const DIST_DIR = resolveSiteRoot();
 
-// <script ...>...</script>，惰性匹配内容，属性里不允许出现 >
-const SCRIPT_RE = /<script([^>]*)>([\s\S]*?)<\/script>/gi;
+// 先完整匹配 HTML 标签，避免把代码块复制按钮属性里的脚本示例当成脚本元素。
+const HTML_TAG_RE =
+	/<script(?=[\s/>])((?:[^>"']|"[^"]*"|'[^']*')*)>([\s\S]*?)<\/script>|<!--[\s\S]*?-->|<[a-z][\w:-]*(?=[\s/>])(?:[^>"']|"[^"]*"|'[^']*')*>/gi;
 
 // 只碰这几种 type（空 type 就是普通 JS）
 const JS_TYPES = new Set([
@@ -68,9 +69,9 @@ async function main() {
 		let fileSaved = 0;
 
 		const output = html.replace(
-			SCRIPT_RE,
-			(whole, attrs: string, code: string) => {
-				if (!shouldMinify(attrs)) return whole;
+			HTML_TAG_RE,
+			(whole, attrs: string | undefined, code: string) => {
+				if (attrs === undefined || !shouldMinify(attrs)) return whole;
 				const minified = minifyInline(code, file);
 				if (minified === code) return whole;
 				scriptCount++;

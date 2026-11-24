@@ -1,12 +1,14 @@
 import type { CommentConfig } from "../types/commentConfig";
 
+const twikooEnvId = globalThis.process?.env.TWIKOO_ENV_ID ?? "";
+
 export const commentConfig: CommentConfig = {
-	// 评论系统类型: none, twikoo, waline, giscus, disqus, artalk，默认为none，即不启用评论系统
-	type: "none",
+	// 配置自己的 Twikoo 服务后启用文章评论、访问量和留言板。
+	type: twikooEnvId ? "twikoo" : "none",
 
 	//twikoo评论系统配置
 	twikoo: {
-		envId: "https://twikoo.vercel.app",
+		envId: twikooEnvId,
 		// 设置 Twikoo 评论系统语言
 		lang: "zh-CN",
 		// 是否启用文章访问量统计功能

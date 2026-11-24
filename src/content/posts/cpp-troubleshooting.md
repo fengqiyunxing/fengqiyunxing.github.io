@@ -21,7 +21,7 @@ slug: cpp-troubleshooting
 - 如果开启了 core dump 文件的转存，那么程序崩溃之后就会生成 core dump 文件，这里面会有程序运行时的堆栈信息，然后我们可以用 gdb 工具去分析 core dump 文件。
 - 用 gdb 分析 core dump 文件的命令如下。
 
-```
+```bash
 gdb myapp core
 ```
 
@@ -33,7 +33,7 @@ gdb myapp core
 
 - 如果程序崩溃问题可以重现，也可以使用 GDB 直接调试程序，在编译程序时使用 -g 选项添加调试信息，例如：
 
-```
+```bash
 gcc -g -o myapp myapp.c
 ```
 
@@ -47,7 +47,7 @@ gdb myapp
 - 程序崩溃后，使用 bt 命令查看调用栈，找出问题所在的函数和代码行。
 - 有些程序会在崩溃时输出错误信息到标准错误输出（stderr），那么这时候直接去看错误日志就行了，查看错误日志的命令如下。
 
-```
+```bash
 cat error.log
 ```
 
@@ -68,7 +68,7 @@ cat error.log
 
 - 可以用 Valgrind 工具来检测内存泄漏，首先看一段 C 程序示例，比如：
 
-```
+```c
 #include <stdlib.h>
 int main()
 {
@@ -79,13 +79,13 @@ int main()
 
 - 编译程序时需要加上 -g 选项打开调试信息，使用 IDE 的可以用 Debug 模式编译，编译命令如下。
 
-```
+```bash
 gcc -g -o main main.c
 ```
 
 - 使用 Valgrind 检测内存使用情况的命令如下。
 
-```
+```bash
 valgrind --tool=memcheck --leak-check=full ./main
 ```
 

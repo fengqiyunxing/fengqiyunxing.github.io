@@ -39,7 +39,7 @@ slug: cpp-stl
 - **无内置同步机制**：`std::map` 没有提供任何锁（如互斥量）或原子操作来保证多线程安全，所有同步逻辑需要开发者手动实现。
 - **方案一（加锁保护）**：使用 `std::mutex` 或 `std::lock_guard` 等同步工具，确保同一时间只有一个线程能访问或修改 map。
 
-```
+```cpp
 #include <map>
 #include <mutex>
 
@@ -91,7 +91,7 @@ int safe_find(int key) {
 - **顺序容器的禁用写法**：因为上述失效范围，所以不能使用 `erase(it++)` 的方式。
 - **顺序容器的正确做法**：`erase` 的返回值是下一个有效迭代器，要写成 `It = c.erase(it);`。
 
-```
+```cpp
 std::vector<int> arrayInt;
 ...
 std::vector<int>::iterator it = arrayInt.begin();
@@ -114,7 +114,7 @@ while (it != arrayInt.end())
 - **关联容器（map、set、multimap、multiset）的失效范围**：`erase` 迭代器只是被删除元素的迭代器失效。
 - **关联容器的返回值**：关联式容器的 `erase()` 的返回值是 void，所以要采用 `erase(it++)` 的方式删除迭代器。
 
-```
+```cpp
 std::map<int, struct> mapInfo;
 ...
 std::map<int, struct>::iterator it = mapInfo.begin();
@@ -139,7 +139,7 @@ while (it != mapInfo.end())
 - **vector 插入（扩容）**：当在 vector 中插入元素时，如果插入操作导致容器的内存重新分配（即插入后容器的容量不足，需要重新分配更大的内存空间），那么所有指向 vector 的迭代器、指针和引用都会失效。
 - **vector 插入（扩容的原因）**：因为重新分配内存后，元素会被移动到新的内存位置。
 
-```
+```cpp
 #include <iostream>
 #include <vector>
 
@@ -157,7 +157,7 @@ int main() {
 - **vector 删除元素**：当在 vector 中删除元素时，指向被删除元素的迭代器、指针和引用会失效。
 - **vector 删除（后半部分）**：并且指向删除位置之后的元素的迭代器、指针和引用也会失效。
 
-```
+```cpp
 #include <iostream>
 #include <vector>
 
@@ -176,7 +176,7 @@ int main() {
 - **deque 头尾插入**：在 deque 的头部或尾部插入元素时，指向元素的迭代器、指针和引用不会失效。
 - **deque 头尾插入的例外**：但如果插入操作导致内存重新分配，那么迭代器可能会失效。
 
-```
+```cpp
 #include <iostream>
 #include <deque>
 
@@ -194,7 +194,7 @@ int main() {
 - **deque 中间删除**：删除 deque 中间的元素时，所有迭代器、指针和引用都会失效。
 - **deque 头尾删除**：删除 deque 头部或尾部的元素时，指向被删除元素的迭代器、指针和引用会失效。
 
-```
+```cpp
 #include <iostream>
 #include <deque>
 
@@ -213,7 +213,7 @@ int main() {
 - **set 插入不失效的原因**：因为关联式容器使用红黑树等平衡二叉搜索树实现，插入操作只是在树中添加新节点，不会影响其他节点的内存位置。
 - **set 删除**：指向被删除元素的迭代器、指针和引用会失效，其他迭代器、指针和引用不会失效。
 
-```
+```cpp
 #include <iostream>
 #include <set>
 
@@ -233,7 +233,7 @@ int main() {
 - **map 插入**：map 在插入元素不会使任何迭代器、指针和引用失效，原因与 set 相同。
 - **map 删除**：指向被删除元素的迭代器、指针和引用会失效，其他迭代器、指针和引用不会失效。
 
-```
+```cpp
 #include <iostream>
 #include <map>
 
@@ -254,7 +254,7 @@ int main() {
 - **list 插入不失效的原因**：因为链表的插入操作只是修改节点的指针，不会影响其他节点的内存位置。
 - **list 删除**：指向被删除元素的迭代器、指针和引用会失效，其他迭代器、指针和引用不会失效。
 
-```
+```cpp
 #include <iostream>
 #include <list>
 

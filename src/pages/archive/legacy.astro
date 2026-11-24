@@ -1,0 +1,51 @@
+---
+import legacyArticles from "@/constants/legacy-archive.json";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { getPostUrlBySlug } from "@/utils/url-utils";
+
+const years = new Map<string, typeof legacyArticles>();
+for (const article of legacyArticles) {
+	const year = article.date.slice(0, 4);
+	const group = years.get(year) ?? [];
+	group.push(article);
+	years.set(year, group);
+}
+---
+
+<MainGridLayout title="旧文档案" description="历年的学习笔记、项目实验和搭站记录。">
+  <div class="flex flex-col gap-4">
+    <section class="card-base px-6 py-5 md:px-8">
+      <h1 class="text-2xl font-bold text-90">旧文档案</h1>
+      <p class="mt-2 text-75">历年的学习笔记、项目实验和搭站记录，共 {legacyArticles.length} 条来源记录。</p>
+    </section>
+    {
+      [...years].map(([year, articles]) => (
+        <details class="card-base px-6 py-4 md:px-8" open>
+          <summary class="cursor-pointer select-none font-semibold text-90">
+            {year} 年 <span class="ml-2 text-sm font-normal text-50">{articles.length} 条</span>
+          </summary>
+          <ul class="mt-3 divide-y divide-black/5 dark:divide-white/10">
+            {articles.map((article) => (
+              <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1 py-2.5">
+                <time datetime={article.date} class="shrink-0 text-sm tabular-nums text-50">
+                  {article.date.slice(0, 10)}
+                </time>
+                <a
+                  class="font-medium text-90 hover:text-(--primary)"
+                  href={article.post ? getPostUrlBySlug(article.post) : article.url}
+                >
+                  {article.title}
+                </a>
+                {article.post ? (
+                  <a class="text-sm text-50 hover:text-(--primary)" href={article.url}>{article.source}原文</a>
+                ) : (
+                  <span class="text-sm text-50">{article.source} · 源站记录</span>
+                )}
+              </li>
+            ))}
+          </ul>
+        </details>
+      ))
+    }
+  </div>
+</MainGridLayout>

@@ -21,7 +21,7 @@ slug: cpp-basics
 - 指针是指向另外一种类型的复合类型。
 - 在 64 位计算机中，指针占 8 个字节空间，无论它指向的是 int 还是 char。
 
-```
+```cpp
 #include<iostream>
 
 using namespace std;
@@ -38,7 +38,7 @@ int main(){
 
 - 用法之一是指向普通对象，用 new 创建对象后由指针持有其地址。
 
-```
+```cpp
 #include <iostream>
 
 using namespace std;
@@ -56,7 +56,7 @@ int main()
 
 - 用法之二是指向常量对象，这种指针称为常量指针。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -71,7 +71,7 @@ int main(void)
 
 - 用法之三是指向函数，这种指针称为函数指针。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -90,7 +90,7 @@ int main(void)
 
 - 用法之四是指向对象成员，包括指向对象成员函数的指针和指向对象成员变量的指针，特别注意定义指向成员函数的指针时要标明指针所属的类。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -122,7 +122,7 @@ int main()
 
 - 用法之五是 this 指针，它是指向类的当前对象的指针常量。
 
-```
+```cpp
 #include <iostream>
 #include <cstring>
 using namespace std;
@@ -173,7 +173,7 @@ int main()
 
 - 悬空指针是指指针原本指向一块内存空间，当这块内存空间被释放后，该指针依然指向这块内存空间的情况。
 
-```
+```cpp
 void *p = malloc(size);
 free(p); 
 // 此时，p 指向的内存空间已释放， p 就是悬空指针。
@@ -181,7 +181,7 @@ free(p);
 
 - 野指针是指不确定其指向的指针，未初始化的指针就是野指针。
 
-```
+```cpp
 void *p; 
 // 此时 p 是“野指针”。
 ```
@@ -201,14 +201,14 @@ void *p;
 - 常量指针的特点是 const 的位置在指针声明运算符 `*` 的左侧，只要 const 位于 `*` 的左侧，无论它在类型名的左边或右边，都表示指向常量的指针。
 - 可以这样理解，`*` 左侧表示指针指向的对象，该对象为常量，那么该指针为常量指针。
 
-```
+```cpp
 const int * p;
 int const * p;
 ```
 
 - 注意点之一是指针指向的对象不能通过这个指针来修改，也就是说常量指针可以被赋值为变量的地址，之所以叫做常量指针，是限制了通过这个指针修改变量的值。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -223,7 +223,7 @@ int main()
 
 - 注意点之二是虽然常量指针指向的对象不能变化，可是因为常量指针本身是一个变量，因此可以被重新赋值。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -240,14 +240,14 @@ int main()
 - 指针常量的本质上是个常量，只不过这个常量的值是一个指针，它和常量指针恰恰相反，不可以修改指针的指向，但可以通过对指针解引用修改指针指向的内容。
 - 指针常量的特点是 const 位于指针声明操作符右侧，表明该对象本身是一个常量，左侧表示该指针指向的类型，即以 `*` 为分界线，其左侧表示指针指向的类型，右侧表示指针本身的性质。
 
-```
+```cpp
 const int var;
 int * const c_p = &var;
 ```
 
 - 注意点之一是指针常量的值是指针，这个值因为是常量，所以指针本身不能改变。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -262,7 +262,7 @@ int main()
 
 - 注意点之二是通过指针常量解引用得到的内容可以改变。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -280,7 +280,7 @@ int main()
 
 - 指针函数本质是一个函数，只不过该函数的返回值是一个指针，相对于普通函数而言只是返回值是指针。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -306,7 +306,7 @@ int main()
 
 - 函数指针本质是一个指针变量，只不过这个指针指向一个函数，也就是指向函数的指针。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 int fun1(int tmp1, int tmp2)
@@ -358,7 +358,7 @@ int main()
 - 指针传递本质上是值传递，只不过拷贝的是指针的值，拷贝之后实参和形参是不同的指针，通过指针可以间接访问指针所指向的对象，从而可以修改它所指对象的值。
 - 引用传递时，形参是引用类型，我们说它对应的实参被引用传递。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -427,7 +427,7 @@ var 引用传递时的地址：0x23fe4c
 - 当 C++ 程序需要调用 C 语言编写的函数时，C++ 使用链接指示，即 extern "C" 指出任意非 C++ 函数所用的语言。
 - 举例来说，C++ 头文件 <cstring> 中就可能出现这样的链接指示。
 
-```
+```cpp
 // 可能出现在 C++ 头文件<cstring>中的链接指示
 extern "C"{
     int strcmp(const char*, const char*);
@@ -439,7 +439,7 @@ extern "C"{
 
 - 在 C 语言中，关系运算的结果用 int 表示，因此 sizeof(1==1) 的结果是 4。
 
-```
+```c
 #include <stdio.h>
 
 int main(void) {
@@ -455,7 +455,7 @@ int main(void) {
 
 - 在 C++ 中，关系运算的结果是 bool 类型，bool 占 1 个字节，因此 sizeof(1==1) 的结果是 1。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -480,7 +480,7 @@ int main() {
 - 在 C++ 中，struct 和 class 是两种用于定义自定义数据类型的关键字，它们的核心功能相似，都能包含成员变量和成员函数，但存在一些关键区别，主要体现在默认访问权限和默认继承方式上。
 - **默认访问权限不同**：struct 默认访问权限为 public，class 默认访问权限为 private。
 
-```
+```cpp
 struct A {
     int x;  // 默认 public，外部可直接访问
     void f() {}  // 默认 public，外部可调用
@@ -505,7 +505,7 @@ int main() {
 
 - **默认继承方式不同**：当使用继承时，两者的默认继承权限也不同，struct 默认继承方式为 public 继承，class 默认继承方式为 private 继承。
 
-```
+```cpp
 struct Base {
     int x;
 };
@@ -541,7 +541,7 @@ int main() {
 - **赋值影响**：对联合体的不同成员赋值，将会覆盖其他成员的值；而对于结构体的不同成员赋值时，相互不影响。
 - **内存大小**：联合体的大小为其内部所有变量的最大值，按照最大类型的倍数进行分配大小；结构体分配内存的大小遵循内存对齐原则。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -605,7 +605,7 @@ int main()
 - struct 中默认的访问级别是 public，默认的继承级别也是 public；class 中默认的访问级别是 private，默认的继承级别也是 private。
 - 当 class 继承 struct 或者 struct 继承 class 时，默认的继承级别取决于 class 或 struct 本身，即 class 为 private 继承，struct 为 public 继承，也就是取决于派生类的默认继承级别。
 
-```
+```cpp
 struct A{};
 class B : A{}; // private 继承 
 struct C : B{}; // public 继承
@@ -613,7 +613,7 @@ struct C : B{}; // public 继承
 
 - 下面这个例子中，B 是 struct，所以它对 A 的默认继承级别为 public，C 是 class，所以它对 B 的默认继承级别为 private，于是外部无法通过 C 的对象访问 B 中的成员函数。
 
-```
+```cpp
 #include<iostream>
 
 using namespace std;
@@ -663,7 +663,7 @@ int main(){
 - static 用于定义静态变量和静态函数。
 - **保持变量内容持久**：static 作用于局部变量，改变了局部变量的生存周期，使得该变量存在于定义后直到程序运行结束的这段时间。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -686,7 +686,7 @@ int main()
 - static 作用于类的成员变量和类的成员函数，使得类变量或者类成员函数和类有关，也就是说可以不定义类的对象就可以通过类访问这些静态成员。
 - 注意，类的静态成员函数中只能访问静态成员变量或者静态成员函数，不能将静态成员函数定义成虚函数。
 
-```
+```cpp
 #include<iostream>
 using namespace std;
 
@@ -726,7 +726,7 @@ int main()
 - 静态成员变量相当于类域中的全局变量，被类的所有对象所共享，包括派生类的对象。
 - 静态成员变量可以作为成员函数的参数，而普通成员变量不可以。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -746,7 +746,7 @@ int main()
 
 - 静态数据成员的类型可以是所属类的类型，而普通数据成员的类型只能是该类类型的指针或引用。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -791,7 +791,7 @@ int main()
 - 这是因为全局静态变量存放在内存的 BSS 段（未初始化数据段），程序启动时系统会自动将该段所有数据清零。
 - **未初始化的全局静态变量之作用域限制**：和初始化的全局静态变量一样，仅在当前文件内可见，不影响其他文件的同名变量。
 
-```
+```cpp
 // file1.cpp
 static int uninit;  // 未初始化，默认值为0，仅file1可见
 
@@ -828,7 +828,7 @@ static int uninit;  // 与file1的uninit无关，各自为0
 - **作用域不同**：#define 没有作用域的限制，只要是之前预定义过的宏，在以后的程序中都可以使用，而 typedef 有自己的作用域。
 - **指针的操作不同**：typedef 和 #define 在处理指针时不完全一样。
 
-```
+```cpp
 #include <iostream>
 #define INTPTR1 int *
 typedef int * INTPTR2;
@@ -902,7 +902,7 @@ int main()
 - 宏定义只进行文本替换，不会对参数的类型、语句能否正常编译等进行检查。
 - 而内联函数是真正的函数，会对参数的类型、函数体内的语句编写是否正确等进行检查。
 
-```
+```cpp
 #include <iostream>
 
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -955,7 +955,7 @@ int main()
 
 - 可以使用类型转换将 void* 指针转化为 int* 指针。
 
-```
+```cpp
 void* voidPtr = malloc(sizeof(int));  // 分配内存并返回void*指针
 int* intPtr = (int*)voidPtr;           // 将void*指针转化为int*指针
 
@@ -982,7 +982,7 @@ size_t strlen(const char *str) {
 }
 ```
 
-```
+```cpp
 #include <iostream>
 #include <cstring>
 
@@ -999,7 +999,7 @@ int main()
 
 - 若字符数组 arr 作为函数的形参，sizeof(arr) 中 arr 被当作字符指针来处理，strlen(arr) 中 arr 依然是字符数组，从下述程序的运行结果中就可以看出。
 
-```
+```cpp
 #include <iostream>
 #include <cstring>
 
@@ -1034,7 +1034,7 @@ int main()
 - explicit 只可用于修饰单参构造函数，因为无参构造函数和多参构造函数本身就是显式调用的，再加上 explicit 关键字也没有什么意义。
 - 下面是不加 explicit 时发生隐式转换的例子。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -1055,7 +1055,7 @@ int main() {
 - 上述代码中，`A ex = 10;` 在编译时进行了隐式转换，将 10 转换成 A 类型的对象，然后将该对象赋值给 ex。
 - 为了避免隐式转换，可用 explicit 关键字进行声明。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -1083,7 +1083,7 @@ int main() {
 - 对未对齐的部分先用单字节处理到对齐位置，再用块复制。
 - 整个过程不关心数据类型，纯粹按字节搬运，所以复制后目标内存和源内存的二进制内容完全一致，但不会处理像字符串结束符这类特殊情况。
 
-```
+```c
 void *memcpy(void *dst, const void *src, size_t size)
 {
     char *psrc;
@@ -1122,7 +1122,7 @@ void *memcpy(void *dst, const void *src, size_t size)
 
 - strcpy 函数不检查目的缓冲区的大小边界，而是将源字符串逐一地全部赋值给目的字符串地址起始的一块连续的内存空间，同时加上字符串终止符，会导致其他变量被覆盖。
 
-```
+```cpp
 #include <iostream>
 #include <cstring>
 using namespace std;

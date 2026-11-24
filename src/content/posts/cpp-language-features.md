@@ -26,7 +26,7 @@ slug: cpp-language-features
 - **右值引用可以自由移动资源**：右值引用只能绑定到一个将要销毁的对象上，因此可以自由地移动其资源。
 - **左值转换成右值**：`std::move` 可以将一个左值强制转化为右值，继而可以通过右值引用使用该值，以用于移动语义。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -57,7 +57,7 @@ int main()
 - **基本思路**：移动语义通过右值引用（Rvalue References）和移动构造函数（Move Constructors）来优化对象在内存中的传递和处理，避免不必要的数据复制，实现了对象资源的「移动」而非「复制」。
 - **右值引用（Rvalue References）**：通过使用双引号 `&&` 声明右值引用，可以绑定到临时对象或右值，即那些将会被销毁的临时对象，右值引用允许我们对其资源进行移动操作而不是复制操作。
 
-```
+```cpp
 T&& t = T(); // t为右值引用
 
 ```
@@ -65,7 +65,7 @@ T&& t = T(); // t为右值引用
 - **移动构造函数（Move Constructor）**：移动构造函数是专门用于将对象资源从一个右值引用对象「移动」到另一个对象的构造函数。
 - **移动构造函数的做法**：它通过将资源所有权从一个对象转移到另一个对象来避免不必要的数据复制，从而提高程序性能。
 
-```
+```cpp
 // 移动构造函数示例
 T(T&& other) {
     // 将other对象的资源移动到当前对象
@@ -75,7 +75,7 @@ T(T&& other) {
 
 - **标记对象为右值（std::move）**：使用 `std::move` 函数可以将一个对象标记为右值，以便可以调用移动构造函数而不是拷贝构造函数。
 
-```
+```cpp
 T obj1;
 T obj2 = std::move(obj1); // 将obj1标记为右值，调用移动构造函数
 
@@ -96,7 +96,7 @@ T obj2 = std::move(obj1); // 将obj1标记为右值，调用移动构造函数
 
 - **函数原型**：`std::move()` 的形参是 `T&&`，返回类型是 `typename remove_reference<T>::type&&`，函数体内只做一次 `static_cast` 强制类型转换。
 
-```
+```cpp
 template <typename T>
 typename remove_reference<T>::type&& move(T&& t) {
     return static_cast<typename remove_reference<T>::type &&>(t);
@@ -112,7 +112,7 @@ typename remove_reference<T>::type&& move(T&& t) {
 - **remove_reference 右值引用特例**：`remove_reference<T&&>` 是右值引用的部分特例化版本，同样把 `type` 定义为 `T`。
 - **特例化的效果**：举例来说，`int i;` 之后 `remove_reference<decltype(42)>::type a;` 使用原版本，`remove_reference<decltype(i)>::type b;` 使用左值引用特例版本，`remove_reference<decltype(std::move(i))>::type b;` 使用右值引用特例版本，定义的 a、b、c 三个变量都是 int 类型。
 
-```
+```cpp
 //原始的，最通用的版本
 template <typename T>
 struct remove_reference {
@@ -168,7 +168,7 @@ int&& move(int& t) {
 - **对齐带来的问题**：字节对齐时补的字节内容是随机的，会产生垃圾值，所以无法比较。
 - **实现方式**：在结构体中用 `friend bool operator==(const A &tmp1, const A &tmp2);` 声明友元运算符重载函数，再在结构体外逐个比较成员变量。
 
-```
+```cpp
 #include <iostream>
 
 using namespace std;
@@ -207,7 +207,7 @@ int main()
 - **约束一**：模板参数列表不能为空。
 - **约束二**：模板类型参数前必须使用关键字 `class` 或者 `typename`，在模板参数列表中这两个关键字含义相同，可互换使用。
 
-```
+```cpp
 template <typename T, typename U, ...>
 
 ```
@@ -216,7 +216,7 @@ template <typename T, typename U, ...>
 - **函数模板的用法**：对于函数模板而言，模板类型参数可以用来指定返回类型或函数的参数类型，以及在函数体内用于变量声明或类型转换。
 - **函数模板实例化**：当调用一个模板时，编译器用函数实参来推断模板实参，从而使用实参的类型来确定绑定到模板参数的类型。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -241,7 +241,7 @@ int main() {
 - **类模板的写法**：类似函数模板，类模板以关键字 `template` 开始，后跟模板参数列表。
 - **类模板必须显式指定**：编译器不能为类模板推断模板参数类型，需要在使用该类模板时，在模板名后面的尖括号中指明类型。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -283,7 +283,7 @@ int main() {
 - **特化**：函数模板只能全特化，而类模板可以全特化，也可以偏特化。
 - **调用方式**：函数模板可以隐式调用，也可以显式调用，类模板只能显式调用。
 
-```
+```cpp
 #include <iostream>
 using namespace std;
 
@@ -315,7 +315,7 @@ int main() {
 - **递归展开（终止版本）**：可变参数函数通常是递归的，第一个版本的 `print_fun` 负责终止递归并打印初始调用中的最后一个实参。
 - **递归展开（可变参数版本）**：第二个版本的 `print_fun` 是可变参数版本，打印绑定到 t 的实参，并用来调用自身来打印函数参数包中的剩余值。
 
-```
+```cpp
 template <typename T, typename... Args> // Args 是模板参数包
 void foo(const T &t, const Args&... rest); // 可变参数模板，rest 是函数参数包
 
