@@ -45,18 +45,15 @@ export const siteConfig: SiteConfig = {
 
 	// 站点副标题（【R-510】原作者的 "Demo site" 已清空，待确认后填写）
 	// 【2026-09-27 SEO 优化】补充副标题
-	subtitle: "C++ / 后端开发学习笔记",
+	subtitle: "C++、Linux 与后端开发",
 
 	// 站点 URL
-	// 【R-510】原作者的 https://firefly.cuteleaf.cn 已移除
-	// ⚠️ 占位值：按已确定的仓库名预填 GitHub Pages 地址，双部署（Cloudflare Workers + GitHub Pages）
-	//    选哪个作为 canonical 主域名尚未确认，需你拍板后定稿。留空会导致构建期 new URL() 报错，故不能为空。
 	site_url: "https://fengqiyunxing.github.io",
 
 	// 站点描述（【R-510】原作者主题宣传文案已清空，待确认后填写）
 	// 【2026-09-27 SEO 优化】填写完整站点描述（meta description，搜索结果摘要的主要来源）
 	description:
-		"fengqiyunxing 的个人技术博客，分享 C++ 学习笔记、后端开发、STL 标准库、智能指针、Linux 等技术文章，整理自小林coding《C++面试题》等优质资料，系统讲解 C++ 基础、面向对象、内存管理与现代 C++ 特性。",
+		"fengqiyunxing 的个人技术博客，记录 C++、Linux 和后端开发中的学习与实践，收录 C++ 系列笔记、Makefile、Socket 编程、KDTree 实现和历年项目记录。",
 
 	// 站点关键词（【R-510】已移除原作者品牌词 Firefly / Fuwari）
 	// 【2026-09-27 SEO 优化】按博客实际内容补充长尾关键词

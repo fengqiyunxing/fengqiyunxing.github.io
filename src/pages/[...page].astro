@@ -14,11 +14,13 @@ export const getStaticPaths = (async ({ paginate }) => {
 // https://github.com/withastro/astro/issues/6507#issuecomment-1489916992
 
 const { page } = Astro.props;
+const pageTitle = page.currentPage > 1 ? `文章列表 · 第 ${page.currentPage} 页` : undefined;
+const pageDescription = pageTitle ? `${pageTitle}。浏览 C++、Linux 和后端开发的文章与实践记录。` : undefined;
 
 const len = page.data.length;
 ---
 
-<MainGridLayout>
+<MainGridLayout title={pageTitle} description={pageDescription}>
   <PostPage page={page} />
   {
     page.total > page.size && (

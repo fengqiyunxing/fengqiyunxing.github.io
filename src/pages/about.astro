@@ -17,6 +17,7 @@ if (!aboutPost) {
 }
 
 const { Content } = await render(aboutPost);
+const description = "了解 fengqiyunxing 的技术博客、写作主题和历年文章来源。";
 
 const avatarUrl = await getAuthorAvatarUrl();
 const jsonLd = buildProfilePage({
@@ -24,10 +25,10 @@ const jsonLd = buildProfilePage({
 	profileConfig,
 	authorUrl: Astro.url.toString(),
 	avatarUrl,
-	description: profileConfig.bio,
+	description,
 });
 ---
-<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
+<MainGridLayout title={i18n(I18nKey.about)} description={description}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
         <div class="card-base z-10 px-9 py-6 relative w-full ">

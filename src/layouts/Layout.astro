@@ -50,6 +50,7 @@ interface Props {
 	postSlug?: string;
 	postCoverImage?: string;
 	hasWallpaper?: boolean;
+	noindex?: boolean;
 }
 
 let {
@@ -60,6 +61,7 @@ let {
 	postSlug,
 	postCoverImage,
 	hasWallpaper = false,
+	noindex = false,
 } = Astro.props;
 
 // apply a class to the body element to decide the height of the banner, only used for initial page load
@@ -67,9 +69,10 @@ let {
 // so use Swup hooks instead to change the height immediately when a link is clicked
 const isHomePageCheck = isHomePage(Astro.url.pathname);
 const isNotFoundPage = Astro.routePattern === "/404";
-const pageUrl = isNotFoundPage
-	? new URL(url("/404.html"), Astro.url)
-	: Astro.url;
+const pageUrl = new URL(
+	isNotFoundPage ? url("/404.html") : Astro.url.pathname,
+	Astro.site,
+);
 
 // defines global css variables
 // why doing this in Layout instead of GlobalStyles: https://github.com/withastro/astro/issues/6728#issuecomment-1502203757
@@ -178,7 +181,7 @@ const siteLogo = await getSiteLogo();
     }
     <meta name="author" content={profileConfig.name} />
 
-    {isNotFoundPage && <meta name="robots" content="noindex" />}
+    {(noindex || isNotFoundPage) && <meta name="robots" content="noindex" />}
     <link rel="canonical" href={pageUrl} />
     <meta property="og:site_name" content={siteConfig.title} />
     <meta property="og:url" content={pageUrl} />

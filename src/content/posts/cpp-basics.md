@@ -8,6 +8,8 @@ category: 'C++笔记'
 draft: false
 lang: 'zh-CN'
 slug: cpp-basics
+series: C++ 系列笔记
+seriesOrder: 1
 ---
 
 > 本笔记整理自小林coding《C++面试题》（https://xiaolincoding.com/interview/cpp.html），用于个人复习与分享，如涉侵权请联系删除。
