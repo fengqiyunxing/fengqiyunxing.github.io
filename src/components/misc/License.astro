@@ -86,6 +86,9 @@ const licenseIcon = licenseName
       >
     </div>
   </div>
+  {!licenseName && licenseConf.notice && (
+    <p class="mt-3 text-sm text-75">{licenseConf.notice}</p>
+  )}
   <Icon
     name={licenseIcon}
     class="transition text-[15rem] absolute pointer-events-none right-6 top-1/2 -translate-y-1/2 text-black/5 dark:text-white/5"

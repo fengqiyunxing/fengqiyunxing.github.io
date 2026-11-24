@@ -6,6 +6,9 @@ category: "旧文档案"
 tags: ["旧文"]
 lang: "zh-CN"
 sourceLink: "https://www.cnblogs.com/xiuzhublog/p/13747494.html"
+author: "dreamcatcher-cx"
+licenseName: "原文转载声明"
+licenseUrl: "https://www.cnblogs.com/chengxiao/p/6059914.html"
 archived: true
 ---
 
@@ -457,6 +460,6 @@ System.out.println("结果:"+map.get(new Person(1234,"萧峰")));
 [dreamcatcher-cx](http://www.cnblogs.com/chengxiao/)
 
 出处：
-[<http://www.cnblogs.com/chengxiao/>](http://www.cnblogs.com/chengxiao/)
+[HashMap实现原理及源码分析](https://www.cnblogs.com/chengxiao/p/6059914.html)
 
 本文版权归作者和博客园共有，欢迎转载，但未经作者同意必须保留此段声明，且在页面明显位置给出原文链接。
