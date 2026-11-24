@@ -3,8 +3,7 @@ import type { CommentConfig } from "../types/commentConfig";
 const twikooEnvId = globalThis.process?.env.TWIKOO_ENV_ID ?? "";
 
 export const commentConfig: CommentConfig = {
-	// 配置自己的 Twikoo 服务后启用文章评论、访问量和留言板。
-	type: twikooEnvId ? "twikoo" : "none",
+	type: "giscus",
 
 	//twikoo评论系统配置
 	twikoo: {
@@ -54,20 +53,19 @@ export const commentConfig: CommentConfig = {
 	},
 
 	//giscus评论系统配置
-	// 【R-510】原作者仓库 CuteLeaf/Firefly 及其 repoId / categoryId 已清空，待确认后填入自己的仓库
 	giscus: {
 		// 设置 Giscus 评论系统仓库，格式：用户名/仓库名
-		repo: "",
+		repo: "fengqiyunxing/fengqiyunxing.github.io",
 		// 设置 Giscus 评论系统仓库ID
-		repoId: "",
+		repoId: "R_kgDOUuZXWQ",
 		// 设置 Giscus 评论系统分类
-		category: "General",
+		category: "Announcements",
 		// 获取 Giscus 评论系统分类ID
-		categoryId: "",
+		categoryId: "DIC_kwDOUuZXWc4DL2qm",
 		// 获取 Giscus 评论系统映射方式
-		mapping: "title",
+		mapping: "pathname",
 		// 获取 Giscus 评论系统严格模式
-		strict: "0",
+		strict: "1",
 		// 获取 Giscus 评论系统反应功能
 		reactionsEnabled: "1",
 		// 获取 Giscus 评论系统元数据功能
