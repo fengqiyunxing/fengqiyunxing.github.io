@@ -298,7 +298,7 @@ export const siteConfig: SiteConfig = {
 	// ── VNDB配置 ──────────────────────────────────
 	vndb: {
 		// VNDB 用户 ID
-		userId: "",  // 【R-510】已清空原作者 userId u358128
+		userId: "", // 【R-510】已清空原作者 userId u358128
 		// 数据模式：static=构建时获取，dynamic=客户端实时获取
 		// static 模式在构建时获取数据并静态渲染，部署后数据不更新
 		// dynamic 模式在浏览器中实时请求 API，始终显示最新数据
@@ -318,9 +318,9 @@ export const siteConfig: SiteConfig = {
 	// ── MyAnimeList配置 ──────────────────────────────────
 	mal: {
 		// MyAnimeList 用户名（列表需为公开状态，私密列表无法读取）
-		username: "",  // 【R-510】已清空原作者 cuteleaf 用户名
+		username: "", // 【R-510】已清空原作者 cuteleaf 用户名
 		// MyAnimeList Client ID，在 https://myanimelist.net/apiconfig 注册免费应用后获取
-		clientId: "",  // 【R-510】已清空原作者 clientId（敏感凭据）
+		clientId: "", // 【R-510】已清空原作者 clientId（敏感凭据）
 		// MAL API 地址
 		apiUrl: "https://api.myanimelist.net/v2",
 		// 动画条目详情页地址，末尾需要带 /

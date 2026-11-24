@@ -72,35 +72,18 @@ const search = async () => {
 
 // --- Initialization onMount ---
 onMount(() => {
-	const initialize = async () => {
+	keyword = getInitialKeyword();
+
+	const initialize = () => {
 		initialized = true;
-
-		// 从 URL 获取初始关键词
-		const initialKeyword = getInitialKeyword();
-		if (initialKeyword) {
-			keyword = initialKeyword;
-		}
-
-		// 如果有关键词，自动执行搜索
-		if (keyword.trim()) {
-			await search();
-		}
+		void search();
 	};
 
-	// 开发环境直接初始化
-	if (import.meta.env.DEV) {
-		initialize();
-	} else {
-		// 生产环境等待 Pagefind 加载
-		window.__loadPagefind?.();
-		if (window.pagefind) {
-			initialize();
-		} else {
-			document.addEventListener("pagefindready", initialize, {
-				once: true,
-			});
-		}
-	}
+	const pagefind = window.__loadPagefind?.();
+	if (pagefind) void pagefind.then(initialize);
+	else initialize();
+
+	return () => clearTimeout(debounceTimer);
 });
 
 let debounceTimer: NodeJS.Timeout;

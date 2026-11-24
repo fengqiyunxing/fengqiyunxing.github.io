@@ -13,7 +13,6 @@ let keywordDesktop = "";
 let keywordMobile = "";
 let result: SearchResult[] = [];
 let isSearching = false;
-let initialized = false;
 let debounceTimer: NodeJS.Timeout;
 let searchRequestId = 0;
 
@@ -59,17 +58,10 @@ const handleDesktopFocus = (event: FocusEvent): void => {
 	search(keywordDesktop, true);
 };
 
-const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
-	const panel = document.getElementById("search-panel");
-	if (
-		!panel ||
-		(isDesktop && !keywordDesktop) ||
-		(!isDesktop && !keywordMobile)
-	)
-		return;
-	show
-		? panel.classList.remove("float-panel-closed")
-		: panel.classList.add("float-panel-closed");
+const setPanelVisibility = (show: boolean): void => {
+	document
+		.getElementById("search-panel")
+		?.classList.toggle("float-panel-closed", !show);
 };
 
 const closeSearchPanel = (): void => {
@@ -92,14 +84,13 @@ const handleResultClick = (event: Event, url: string): void => {
 };
 
 // --- Core Search Logic ---
-const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
+const search = (keyword: string, isDesktop: boolean): void => {
 	if (!keyword) {
 		cancelPendingSearch();
-		setPanelVisibility(false, isDesktop);
+		if (isDesktop) setPanelVisibility(false);
 		result = [];
 		return;
 	}
-	if (!initialized) return;
 
 	clearTimeout(debounceTimer);
 	const requestId = ++searchRequestId;
@@ -109,25 +100,30 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 		try {
 			let searchResults: SearchResult[] = [];
 
-			if (import.meta.env.PROD && window.pagefind) {
-				const response = await window.pagefind.search(keyword);
-				searchResults = await Promise.all(
-					response.results.map((item) => item.data()),
-				);
-			} else if (import.meta.env.DEV) {
+			if (import.meta.env.DEV) {
 				searchResults = fakeResult;
+			} else {
+				await window.__loadPagefind?.();
+				if (requestId !== searchRequestId) return;
+
+				if (window.pagefind) {
+					const response = await window.pagefind.search(keyword);
+					searchResults = await Promise.all(
+						response.results.map((item) => item.data()),
+					);
+				}
 			}
 
 			if (requestId !== searchRequestId) return;
 
 			result = searchResults;
-			setPanelVisibility(true, isDesktop);
+			setPanelVisibility(true);
 		} catch (error) {
 			if (requestId !== searchRequestId) return;
 
 			console.error("Search error:", error);
 			result = [];
-			setPanelVisibility(false, isDesktop);
+			if (isDesktop) setPanelVisibility(false);
 		} finally {
 			if (requestId === searchRequestId) {
 				isSearching = false;
@@ -138,48 +134,14 @@ const search = async (keyword: string, isDesktop: boolean): Promise<void> => {
 
 // --- Initialization onMount ---
 onMount(() => {
-	const initializePagefind = () => {
-		initialized = true;
-		if (keywordDesktop) search(keywordDesktop, true);
-		if (keywordMobile) search(keywordMobile, false);
-	};
-
-	if (import.meta.env.DEV) {
-		console.log("Pagefind mock enabled in development mode.");
-		initializePagefind();
-	} else {
-		if (window.pagefind) {
-			// If script already loaded
-			initializePagefind();
-		} else {
-			// Listen for the event
-			document.addEventListener("pagefindready", initializePagefind, {
-				once: true,
-			});
-			document.addEventListener("pagefindloaderror", initializePagefind, {
-				once: true,
-			});
-		}
-	}
-
 	const panel = document.getElementById("search-panel");
 	panel?.addEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
 
 	return () => {
 		panel?.removeEventListener(FLOATING_PANEL_CLOSE_EVENT, cancelPendingSearch);
-		document.removeEventListener("pagefindready", initializePagefind);
-		document.removeEventListener("pagefindloaderror", initializePagefind);
 		cancelPendingSearch();
 	};
 });
-
-// --- Reactive Statements ---
-$: if (initialized && (keywordDesktop || keywordDesktop === "")) {
-	search(keywordDesktop, true);
-}
-$: if (initialized && (keywordMobile || keywordMobile === "")) {
-	search(keywordMobile, false);
-}
 </script>
 
 <!-- search bar for desktop view -->
@@ -190,6 +152,7 @@ $: if (initialized && (keywordMobile || keywordMobile === "")) {
     <Icon icon="material-symbols:search"
           class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
     <input id="search-input-desktop" placeholder="{i18n(I18nKey.search)}" bind:value={keywordDesktop}
+               on:input={(event) => search(event.currentTarget.value, true)}
            aria-controls="search-panel" data-floating-panel-no-expanded
            on:focus={handleDesktopFocus}
            class="transition-all pl-10 text-sm bg-transparent outline-0
@@ -216,6 +179,7 @@ top-20 left-4 md:left-[unset] right-4 shadow-2xl rounded-2xl p-2"
         <Icon icon="material-symbols:search"
               class="absolute text-[1.25rem] pointer-events-none ml-3 transition my-auto text-black/30 dark:text-white/30"></Icon>
         <input placeholder={i18n(I18nKey.search)} bind:value={keywordMobile}
+               on:input={(event) => search(event.currentTarget.value, false)}
                on:focus={requestPagefind}
                class="pl-10 absolute inset-0 text-sm bg-transparent outline-0
                focus:w-60 text-black/50 dark:text-white/50"

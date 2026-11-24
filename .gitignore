@@ -55,4 +55,6 @@ package/
 *.log
 # 备份与临时目录
 .git.bak/
-_tmp_blog_build_*/\n
+_tmp_blog_build_*/
+dist_old_*/
+node_modules_broken_*/
