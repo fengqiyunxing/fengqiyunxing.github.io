@@ -15,7 +15,7 @@ User-agent: OAI-SearchBot
 User-agent: Claude-SearchBot
 User-agent: PerplexityBot
 User-agent: Meta-WebIndexer
-Disallow: /
+Allow: /
 
 User-agent: *
 Allow: /
